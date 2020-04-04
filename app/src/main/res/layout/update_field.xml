@@ -20,7 +20,7 @@
             android:layout_weight="1.4"
             android:layout_margin="5dp"/>
         <EditText
-            android:id="@+id/productedittext"
+            android:id="@+id/edit_productedit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="0.6"
@@ -42,7 +42,7 @@
             android:layout_weight="1.4"
             android:layout_margin="5dp"/>
         <EditText
-            android:id="@+id/priceedittext"
+            android:id="@+id/edit_price_edit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="0.6"
@@ -51,7 +51,7 @@
 
     </LinearLayout>
     <EditText
-        android:id="@+id/noteedit"
+        android:id="@+id/edit_note_edit"
         android:inputType="textMultiLine"
         android:lines="8"
         android:layoutDirection="rtl"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:text="حدف"
             android:textStyle="bold"
-            android:id="@+id/del_valiue"
+            android:id="@+id/btn_del_valiue"
             android:layout_weight="1"
             android:textSize="25dp"
             android:textColor="#FFFFFF"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="بروز رسانی"
             android:textStyle="bold"
-            android:id="@+id/update_value"
+            android:id="@+id/btn_update_value"
             android:layout_weight="1"
             android:textSize="25dp"
             android:textColor="#FFFFFF"

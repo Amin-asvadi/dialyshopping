@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.HardwarePropertiesManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,12 @@ public class Home_Activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     RecyclerView recyclerView;
     TextView totalamont;
+
+
+    private String type;
+    private int amount;
+    private String note;
+    private String post_key;
 
 
     @Override
@@ -141,14 +148,81 @@ public class Home_Activity extends AppCompatActivity {
                 mDatabase
         ) {
             @Override
-            protected void populateViewHolder(MyViewHolder myViewHolder, Data data, int i) {
+            protected void populateViewHolder(MyViewHolder myViewHolder, final Data data, final int i) {
                 myViewHolder.setDate(data.getDate());
                 myViewHolder.setammount(data.getAmount());
                 myViewHolder.setType(data.getType());
                 myViewHolder.setnote(data.getNote());
+                myViewHolder.myview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        post_key = getRef(i).getKey();
+                        type = data.getType();
+                        note = data.getNote();
+                        amount = data.getAmount();
+                        Log.i("value offffff",type);Log.i("value offffff",note);Log.i("value offffff",String.valueOf(amount));
+
+                        updateData();
+                    }
+                });
             }
         };
         recyclerView.setAdapter(adapter);
+    }
+
+    public void updateData(){
+
+        AlertDialog.Builder mydialog= new AlertDialog.Builder(Home_Activity.this);
+        LayoutInflater inflater = LayoutInflater.from(Home_Activity.this);
+        View mView = inflater.inflate(R.layout.update_field,null);
+        final AlertDialog dialog = mydialog.create();
+        dialog.setView(mView);
+        final EditText editType = mView.findViewById(R.id.edit_productedit_text);
+        final EditText editPrice_ammount =mView.findViewById(R.id.edit_price_edit_text);
+        final EditText editnote = mView.findViewById(R.id.edit_note_edit);
+
+        editType.setText(type);
+        editType.setSelection(type.length());
+
+
+        editPrice_ammount.setText(String.valueOf(amount));
+        editPrice_ammount.setSelection(String.valueOf(amount).length());
+
+        editnote.setText(note);
+        editnote.setSelection(note.length());
+
+        Button btnupdate = mView.findViewById(R.id.btn_update_value);
+        Button btndelet = mView.findViewById(R.id.btn_del_valiue);
+
+
+        btnupdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                type = editType.getText().toString().trim();
+                String mammount = String.valueOf(amount);
+                mammount=editPrice_ammount.getText().toString().trim();
+                note = editnote.getText().toString().trim();
+                int intammount = Integer.parseInt(mammount);
+                String date = DateFormat.getDateInstance().format(new Date());
+                Data data = new Data(type,intammount,note,date,post_key);
+                mDatabase.child(post_key).setValue(data);
+                dialog.dismiss();
+            }
+        });
+        btndelet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabase.child(post_key).removeValue();
+                dialog.dismiss();
+            }
+        });
+
+
+
+
+        dialog.show();
+
+
     }
 
 }
