@@ -1,5 +1,6 @@
 package com.exa.dailyshoppinglist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,13 +14,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -29,6 +36,7 @@ public class Home_Activity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     RecyclerView recyclerView;
+    TextView totalamont;
 
 
     @Override
@@ -41,14 +49,33 @@ public class Home_Activity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("shpping list").child(uId);
         mDatabase.keepSynced(true);
         recyclerView = findViewById(R.id.recyclerview);
-
+        totalamont = findViewById(R.id.totalAmount);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
         btnadd = findViewById(R.id.addproduct);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                int totalammont = 0;
+                for (DataSnapshot snap:dataSnapshot.getChildren()){
+                    Data data = snap.getValue(Data.class);
+                    totalammont += data.getAmount();
+                    String sttotal = String.valueOf(totalammont);
+                    totalamont.setText(sttotal);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
