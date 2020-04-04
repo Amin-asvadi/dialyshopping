@@ -2,6 +2,8 @@ package com.exa.dailyshoppinglist;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ public class Home_Activity extends AppCompatActivity {
     Button btnadd;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    RecyclerView recyclerView;
 
 
     @Override
@@ -35,6 +38,14 @@ public class Home_Activity extends AppCompatActivity {
             FirebaseUser mUser =mAuth.getCurrentUser();
             String uId = mUser.getUid();
            mDatabase = FirebaseDatabase.getInstance().getReference().child("shpping list").child(uId);
+           mDatabase.keepSynced(true);
+           recyclerView =findViewById(R.id.recyclerview);
+
+           LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+           linearLayoutManager.setStackFromEnd(true);
+           linearLayoutManager.setReverseLayout(true);
+           recyclerView.setHasFixedSize(true);
+           recyclerView.setLayoutManager(linearLayoutManager);
 
         btnadd = findViewById(R.id.addproduct);
 
